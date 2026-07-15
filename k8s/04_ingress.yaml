@@ -6,11 +6,17 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: instance
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    # HTTP(80) 및 HTTPS(443) 포트 리스너 활성화
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    # 위에서 찾은 eu-west-3 리전의 ACM 인증서 ARN 지정
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-3:450444046629:certificate/545fe45c-03b2-4ecf-aa80-1191c0cb4b6d
+    # HTTP 접속 시 HTTPS로 강제 리다이렉트 수행
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
 spec:
   ingressClassName: alb
   rules:
-    - http:
+    - host: user08.weplat.shop
+      http:
         paths:
           - path: /
             pathType: Prefix
